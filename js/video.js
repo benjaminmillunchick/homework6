@@ -1,8 +1,4 @@
 var video = document.getElementById("myVideo");
-var volume = 100;
-var slider = document.getElementById("volumeSlider");
-var output = document.getElementById("volume");
-output.innerHTML = slider.value;
 
 window.addEventListener("load", function() {
 	video = document.querySelector("#myVideo");
@@ -11,6 +7,7 @@ window.addEventListener("load", function() {
 document.querySelector("#play").addEventListener("click", function() {
 	console.log("Play Video");
 	video.play()
+	span = document.getElementById("volume").innerHTML = (video.volume*100) + "%";
 });
 
 document.querySelector("#pause").addEventListener("click", function() {
@@ -20,31 +17,45 @@ document.querySelector("#pause").addEventListener("click", function() {
 
 document.querySelector("#slower").addEventListener("click", function() {
 	var curSpeed = video.playbackRate;
-	video.playbackRate -= .1;
+	video.playbackRate = curSpeed*.9;
 	console.log("Current speed is:" + curSpeed);
 });
 
 document.querySelector("#faster").addEventListener("click", function() {
-	console.log("Faster Video");
-	video.playbackRate += .1;
+	var curSpeed = video.playbackRate;
+	video.playbackRate = curSpeed/.9;
+	console.log("Current speed is:" + curSpeed);
 });
 
 document.querySelector("#skip").addEventListener("click", function() {
-	console.log("Skip Video");
-	video.currentTime += 5;
+	if(video.currentTime + 5 > video.duration){
+		video.currentTime = 0;
+	}
+	else{
+		video.currentTime += 5;
+	}
+	console.log("Current time of the video: " + video.currentTime);
+	video.play();
 });
 
 document.querySelector("#mute").addEventListener("click", function() {
-	console.log("Mute Video");
-	video.volume = 0;
-	slider.value = 0;
-	output.innerHTML = 0;
+	if(video.muted == true){
+		video.muted = false;
+		document.getElementById("mute").innerHTML="Mute";
+		console.log("Mute");
+	}
+	else{
+		video.muted = true;
+		document.getElementById("mute").innerHTML="Unmute";
+		console.log("Unmute");
+	}
 });
 
-slider.oninput = function() {
-	output.innerHTML = this.value;
+document.querySelector("#volumeSlider").addEventListener("change", function() {
 	video.volume = this.value / 100;
-  }
+	console.log("Current Volume: " + video.volume);
+	document.querySelector("#volume").innerHTML = video.volume * 100 + "%";
+});
 
 document.querySelector("#old").addEventListener("click", function() {
 	console.log("gratscale");
